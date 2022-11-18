@@ -24,4 +24,6 @@ const App = () => {
   return <Course course={course} />
 }
 
+console.log("lmao");
+
 export default App
