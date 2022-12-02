@@ -6,7 +6,6 @@ const Course = (props) => {
     //const { course } = props
     return (
       <div>
-        <h1>Web Development Curriculum</h1>
         <Header name={props.header} />
         <Content parts={props.arrayOfContents} />
       </div>
