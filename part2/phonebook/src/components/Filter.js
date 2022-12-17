@@ -1,5 +1,5 @@
 
-const Filter = ({ persons, filterValue, onFilterChange }) => {
+const Filter = ({ filterValue, onFilterChange }) => {
   //const filterByName = persons.filter();
 
   return (
