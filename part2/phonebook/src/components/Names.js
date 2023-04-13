@@ -1,4 +1,5 @@
-const Names = ({ persons, filtering, filterValue }) => {
+
+const Names = ({ persons, filtering, filterValue, handleRemove }) => {
   //console.log("filter is ", filtering, " filtering: ", filterValue);
 
   if (filtering) {
@@ -13,7 +14,7 @@ const Names = ({ persons, filtering, filterValue }) => {
   } else {
     return persons.map((p) => (
       <div key={p.id}>
-        {p.name}: {p.number}
+        {p.name}: {p.number} <button onClick={() => handleRemove(p)}>delete</button>
       </div>
     ));
   }

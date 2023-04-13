@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personsService from "./services/persons"
 import Names from "./components/Names";
 import Form from "./components/Form";
 import Filter from "./components/Filter";
@@ -11,19 +11,15 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
 
-  const showFilter = filter.length > 0
+  const showFilter = filter.length > 0;
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data);
-      })
-  }, [])
+    personsService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+    })
+  }, []);
 
-  console.log('render', persons.length, '')
+  //console.log("render", persons.length, "");
 
   const handleFilterChange = (event) => {
     //console.log(event.target.value)
@@ -45,7 +41,7 @@ const App = () => {
 
     const nameExists = persons.filter((p) => p.name === newName);
     //console.log(nameExists.length);
-    
+
     if (nameExists.length > 0) {
       alert(`${newName} is already added to phonebook`);
       setNewName("");
@@ -53,13 +49,19 @@ const App = () => {
       const nameObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
-      setPersons(persons.concat(nameObject));
+      personsService.create(nameObject)
+      .then((returnedPerson) => setPersons(persons.concat(returnedPerson)))
+      
       setNewName("");
       setNewNumber("");
     }
   };
+
+  const handleClickRemove = (person) => {
+    if (window.confirm(`do you want to remove ${person.name}?`))
+    personsService.remove(person.id);
+  }
 
   return (
     <div>
@@ -78,7 +80,7 @@ const App = () => {
         onNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Names persons={persons} filterValue={filter} filtering={showFilter} />
+      <Names persons={persons} filterValue={filter} filtering={showFilter} handleRemove={() => handleClickRemove()}/>
     </div>
   );
 };
