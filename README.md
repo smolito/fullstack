@@ -1,2 +1,2 @@
 # fullstack
-fullstack open 2022
+fullstack open
