@@ -40,11 +40,17 @@ const App = () => {
     event.preventDefault();
 
     const nameExists = persons.filter((p) => p.name === newName);
-    //console.log(nameExists.length);
 
     if (nameExists.length > 0) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
+      //alert(`${newName} is already added to phonebook`);
+      if (window.confirm(`${newName} is already added to the phonebook. Do you want to replace the old number with a new one?`)){
+        const newNameObject = {
+          name: newName,
+          number: newNumber,
+        };
+        personsService.update(nameExists[0].id,newNameObject);
+        setNewName("");
+      }
     } else {
       const nameObject = {
         name: newName,
@@ -61,6 +67,7 @@ const App = () => {
   const handleClickRemove = (person) => {
     if (window.confirm(`do you want to remove ${person.name}?`))
     personsService.remove(person.id);
+    //console.log("person from handleClickRemove in App.js " + person);
   }
 
   return (
@@ -80,7 +87,7 @@ const App = () => {
         onNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Names persons={persons} filterValue={filter} filtering={showFilter} handleRemove={() => handleClickRemove()}/>
+      <Names persons={persons} filterValue={filter} filtering={showFilter} handleRemove={handleClickRemove}/>
     </div>
   );
 };

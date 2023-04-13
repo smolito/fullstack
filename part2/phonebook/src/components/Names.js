@@ -19,5 +19,4 @@ const Names = ({ persons, filtering, filterValue, handleRemove }) => {
     ));
   }
 };
-
 export default Names;
