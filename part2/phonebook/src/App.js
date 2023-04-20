@@ -3,6 +3,8 @@ import personsService from "./services/persons"
 import Names from "./components/Names";
 import Form from "./components/Form";
 import Filter from "./components/Filter";
+import NotificationSucces from "./components/NotificationSuccess";
+import NotificationError from "./components/NotificationError";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +12,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const showFilter = filter.length > 0;
 
@@ -48,7 +52,20 @@ const App = () => {
           name: newName,
           number: newNumber,
         };
-        personsService.update(nameExists[0].id,newNameObject);
+        personsService
+        .update(nameExists[0].id,newNameObject)
+        .then((updatedPerson) => {
+          setNotificationMessage(`'${updatedPerson.name}' has been updated in your phonebook.`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+            }, 5000)
+        })
+        .catch((error) => {
+          setErrorMessage(`${newName} has already been removed from the server.`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 6000)
+        })
         setNewName("");
       }
     } else {
@@ -57,7 +74,13 @@ const App = () => {
         number: newNumber,
       };
       personsService.create(nameObject)
-      .then((returnedPerson) => setPersons(persons.concat(returnedPerson)))
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson))
+        setNotificationMessage(`${returnedPerson.name} has been added to the phonebook.`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 3000)
+      })
       
       setNewName("");
       setNewNumber("");
@@ -73,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <NotificationSucces message={notificationMessage}/>
+      <NotificationError message={errorMessage}/>
       <Filter
         persons={persons}
         filterValue={filter}
